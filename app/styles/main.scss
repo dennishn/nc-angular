@@ -1,0 +1,55 @@
+// Nodes SCSS Framework
+// Avoid changing the order in which partials are loaded.
+
+// Make sure the charset is set appropriately
+@charset "UTF-8";
+// The all powerfull cross-browser resets
+@import "normalize";
+
+//Compass Imports
+//
+
+//Nodes Globals
+//Mixins and Functions must NEVER be dependant on variables
+//Variables can have their values computed by mixins
+@import
+    // Functions
+    /* ---> Do not delete this comment (functions) <--- */
+    // Mixins
+    /* ---> Do not delete this comment (mixins) <--- */
+    "variables";
+
+// Foundation is not automatically importable by wiredep
+@import "bower_components/foundation/scss/foundation";
+// Neither is Animate.css-scss
+@import "bower_components/animate.css-scss/animate";
+
+// Wiredep:
+// bower:scss
+@import "../../bower_components/animate.css-scss/animate.scss";
+// endbower
+
+// Style Components (Uncomment the import statement below to get started)
+// Base
+/* ---> Do not delete this comment (base) <--- */
+// Elements
+@import "elements/loading-bar";
+/* ---> Do not delete this comment (elements) <--- */
+// Modules
+/* ---> Do not delete this comment (modules) <--- */
+// Components
+/* ---> Do not delete this comment (components) <--- */
+// UI-Blocks
+/* ---> Do not delete this comment (ui-blocks) <--- */
+// Plugins
+/* ---> Do not delete this comment (plugins) <--- */
+
+// Application Components (Uncomment the import statement below to get started)
+@import "../common/core/logger/logger";
+@import "../common/core/loadingindicator/loadingindicator";
+// Directives
+/* ---> Do not delete this comment (Directives) <--- */
+// Services
+@import "../modules/index/index";
+@import "../modules/directive/directive";
+/* ---> Do not delete this comment (Modules) <--- */

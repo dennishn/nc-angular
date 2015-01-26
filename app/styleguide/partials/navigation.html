@@ -1,0 +1,64 @@
+<ul class="side-nav">
+    <li class="heading">General</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "General"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">Elements</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Elements"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">Modules</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Modules"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">Components</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Components"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">UI-Blocks</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Ui-blocks"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">Layouts</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Layouts"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">Pages</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Pages"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>
+<ul class="side-nav">
+    <li class="heading">Plugins</li>
+    {{#withSort pages "data.sort"}}
+        {{#is data.type "Plugins"}}
+            <li><a href="{{filename}}">{{data.title}} {{data.sort}} {{data.type}}</a></li>
+        {{/is}}
+    {{/withSort}}
+</ul>

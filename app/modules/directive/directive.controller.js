@@ -10,18 +10,24 @@
 	 */
 	angular
 		.module('directive')
-		.controller('Directive', Directive);
+		.controller('DirectiveController', Directive);
 
 	/* @ngInject */
 	function Directive() {
 		/*jshint validthis: true */
 		var vm = this;
 
+		vm.controllerFunction = controllerFunction();
+
 		activate();
 
 		function activate() {
-
+			console.log('Directive Controller started');
 		};
+
+		function controllerFunction() {
+			console.log('I was triggered by calling the DirectiveController function "controllerFunction()"');
+		}
 	};
 
 })();

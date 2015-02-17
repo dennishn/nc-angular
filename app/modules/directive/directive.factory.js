@@ -135,12 +135,13 @@
 			console.log(directiveDomElement, $animate);
 
 			// Append the compiled dom to the body
-			$timeout(function() {
-				$animate.enter(directiveDomElement, body, angular.element(body[0].lastChild));
-			}, 100);
+			body.append(directiveDomElement);
+			//$timeout(function() {
+			//	$animate.enter(directiveDomElement, body, angular.element(body[0].lastChild));
+			//}, 100);
 
 			// Add opened class to the body
-			body.addClass(OPENED_CLASS);
+			//body.addClass(OPENED_CLASS);
 
 		}
 

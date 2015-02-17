@@ -1,16 +1,17 @@
 .dii {
-	opacity: 0;
-	transition: 1s all;
+	&.ng-animate {
+		transition: 1s all;
+	}
 	&.ng-enter {
 		opacity: 0;
 	}
 	&.ng-enter-active {
 		opacity: 1;
 	}
-	&.ng-leave {
-		opacity: 1;
-	}
-	&.ng-leave-active {
-		opacity: 0;
-	}
+//	&.ng-leave {
+//		opacity: 1;
+//	}
+//	&.ng-leave-active {
+//		opacity: 0;
+//	}
 }

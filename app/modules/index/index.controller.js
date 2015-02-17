@@ -13,31 +13,51 @@
 		.controller('Index', Index);
 
 	/* @ngInject */
-	function Index(directive) {
+	function Index(directive, $timeout) {
 		/*jshint validthis: true */
 		var vm = this;
 
+		vm.click = click;
+
 		vm.parentValue = 'Parent value';
+
+		vm.directives = [];
 
 		activate();
 
 		function activate() {
-			console.log('controller')
 		};
 
-		vm.click = function() {
-			var directiveInstance = directive.open({
-				template: '<h1>Hehehe</h1>',
-				controller: 'Child',
-				controllerAs: 'appended',
+		function click() {
+			var directiveInstance = new directive.open({
+				template: '<h1>Parent Controller Value: {{appended.items}}</h1>',
+				controller: 'Child as appended',
 				resolve: {
 					items: function () {
 						return vm.parentValue;
 					}
 				}
-			})
+			});
+			vm.directives.push(directiveInstance);
+
+			directiveInstance.result.then(function(result) {
+				console.info('directive closed: ', result);
+				vm.directives.pop();
+			}, function(error) {
+				console.warn('directive dismissed: ', error);
+			});
 		}
-	};
+
+		vm.closeFromOutside = function() {
+			var index = vm.directives.length > 1 ? vm.directives.length -1 : 0;
+			console.log(vm.directives, index);
+			vm.directives[index].close(false);
+		};
+		vm.dismissFromOutside = function() {
+			vm.directiveInstance.dismiss(false);
+		};
+
+	}
 
 })();
 
@@ -60,11 +80,17 @@
 		/*jshint validthis: true */
 		var vm = this;
 
+		vm.items = items;
+
 		activate();
 
 		function activate() {
-			console.log('Child', directiveInstance, items);
+			//console.log('Child', directiveInstance, items);
 		};
+
+		/*$timeout(function() {
+			directiveInstance.close('closed');
+		}, 1000);*/
 
 	};
 

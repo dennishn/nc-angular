@@ -1,6 +1,10 @@
 (function () {
 	'use strict';
 
+	/*
+		TODO: NYI
+	 */
+
 	/**
 	 * @ngdoc function
 	 * @name ncAngularApp.factory:Events

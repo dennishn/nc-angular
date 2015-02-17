@@ -45,10 +45,12 @@
 
 				function getTemplate(template) {
 					return $http.get(angular.isFunction(options.templateUrl) ? (options.templateUrl)() : options.templateUrl,
-						{cache: $templateCache})
-						.then(function(result) {
-							return result.data;
-						});
+						{
+							cache: $templateCache
+						}
+					).then(function(result) {
+						return result.data;
+					});
 				}
 			}
 
@@ -71,6 +73,7 @@
 			 */
 
 			// I open a modal
+			// TODO: More description
 			directive.open = function(directiveOptions) {
 
 				var directiveResultDeferred = $q.defer();
@@ -102,6 +105,7 @@
 				templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
 
 					// Create a new scope
+					console.log(directiveOptions)
 					var directiveScope = (directiveOptions.scope || $rootScope).$new();
 
 					directiveScope.close = directiveInstance.close;
@@ -133,6 +137,11 @@
 						}
 					}
 
+					/*directiveOptions.bindMethods.close = function() {
+						console.log(':o', directiveInstance);
+						DirectiveFactory.close(directiveInstance, false);
+					};*/
+
 					// Open a new DirectiveFactory directive instance
 					DirectiveFactory.open(directiveInstance, {
 						scope: directiveScope,
@@ -151,6 +160,8 @@
 				}, function() {
 					directiveOpenedDeferred.reject(false);
 				});
+
+				return directiveInstance;
 
 			};
 

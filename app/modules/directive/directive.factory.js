@@ -7,6 +7,8 @@
 	 * @description
 	 * # Directive
 	 * Factory of the directive
+	 * A factory is the basic building block of the individual types of
+	 * dynamically created directives.
 	 */
 	angular
 		.module('directive')
@@ -118,7 +120,7 @@
 			directiveRootElement.attr({
 				'template-url': directive.directiveTemplateUrl,
 				'directive-class': directive.directiveClass,
-				'index': openedDirectives.length() - 1,
+				'index': openedDirectives.length() - 1
 			});
 			// Append the directive content (This is perhaps transclusion?
 			directiveRootElement.html(directive.content);
@@ -129,10 +131,13 @@
 			// Add the compiled dom to the LIFO stack
 			openedDirectives.top().value.directiveDomElement = directiveDomElement;
 
+			//console.log(directiveDomElement[0].getBoundingClientRect());
+			console.log(directiveDomElement, $animate);
+
 			// Append the compiled dom to the body
 			$timeout(function() {
-				$animate.enter(directiveDomElement, body);
-			}, 6);
+				$animate.enter(directiveDomElement, body, angular.element(body[0].lastChild));
+			}, 100);
 
 			// Add opened class to the body
 			body.addClass(OPENED_CLASS);

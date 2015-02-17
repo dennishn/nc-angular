@@ -13,6 +13,8 @@
 		 * @description
 		 * # Directive
 		 */
+		var controllers = ['DirectiveController'];
+
 		var directive = {
 			restrict: 'EA',
 			scope: {
@@ -21,6 +23,7 @@
 			},
 			replace: true,
 			transclude: true,
+			controller: DiretiveController,
 			templateUrl: function(tElement, tAttrs) {
 				return tAttrs.templateUrl || 'modules/directive/directive.template.html';
 			},
@@ -73,25 +76,19 @@
 		};
 	};
 
-	angular
-		.module('directive')
-		.controller('DirectiveController', Directive);
-
-	/* @ngInject */
-	function Directive() {
-		/*jshint validthis: true */
+	function DiretiveController($scope, DirectiveFactory) {
 		var vm = this;
 
-		vm.controllerFunction = controllerFunction();
+		// Variables
+		vm.directive = DirectiveFactory.getTop();
 
-		activate();
+		// Methods
+		vm.close = close;
 
-		function activate() {
-			console.log('Directive Controller started');
-		};
-
-		function controllerFunction() {
-			console.log('I was triggered by calling the DirectiveController function "controllerFunction()"');
+		function close() {
+			console.log('i are close');
+			DirectiveFactory.dismiss(vm.directive.key, 'close called');
 		}
-	};
+
+	}
 })();

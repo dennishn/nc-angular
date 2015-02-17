@@ -5,6 +5,10 @@
 		.module('directive')
 	  	.directive('directiveTranscluder', directiveTranscluder);
 
+	/*
+		TODO: What do i do
+	 */
+
 	/* @ngInject */
 	function directiveTranscluder() {
 		/**

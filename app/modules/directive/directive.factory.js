@@ -81,7 +81,8 @@
 				directiveElement.directiveScope.$destroy();
 				body.toggleClass(OPENED_CLASS, openedDirectives.length() > 0);
 
-				// Check and see if a backdrop should be removed
+				// Check and see if a backdrop should be removed, force a render loop to make sure that everyon
+				// knows that the animation that closed the acutal modal finished.
 				$timeout(function() {
 					_checkAndRemoveBackdrop();
 				});
@@ -95,24 +96,16 @@
 
 		// I am used to see if the backdrop is no longer needed, in which case i remove it
 		function _checkAndRemoveBackdrop() {
-			console.log('check n remove');
+
 			if(backdropDomEl && _getBackdropIndex() == -1) {
-				console.log('check n remove');
+
 				var backdropScopeReference = backdropScope;
 
-				//backdropDomEl.remove();
-
 				_removeAfterSomething(backdropDomEl, backdropScope, function() {
-					console.log('check n remove');
 					backdropScopeReference.$destroy();
 					backdropScopeReference = null;
 
 				});
-				/*$animate.leave(backdropDomEl).then(function() {
-					console.log('animate leave done on el: ', backdropDomEl);
-					//domEl.remove();
-
-				});*/
 
 				backdropDomEl = undefined;
 				backdropScope = undefined;
@@ -124,10 +117,9 @@
 		// NOGET MED NG ANIMATE, som destroyer scopes efter en animation... Giver det mening? Bliver done callback her
 		// forbundet med ng animate callbacks? Ville være porno...
 		function _removeAfterSomething(domEl, scope, done) {
-			console.log('calling remove on: ', domEl);
+
 			$animate.leave(domEl).then(function() {
-				console.log('animate leave done on el: ', domEl);
-				//domEl.remove();
+
 				done();
 			});
 

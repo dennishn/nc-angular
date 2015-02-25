@@ -17,7 +17,8 @@
 
 		// Directive defaults
 		this.config = {
-			closeOnEscape: true
+			closeOnEscape: true,
+			backdrop: true
 		};
 
 		// Public API for overwriting default configuration
@@ -105,7 +106,6 @@
 				templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
 
 					// Create a new scope
-					console.log(directiveOptions)
 					var directiveScope = (directiveOptions.scope || $rootScope).$new();
 
 					directiveScope.close = directiveInstance.close;
@@ -137,16 +137,12 @@
 						}
 					}
 
-					/*directiveOptions.bindMethods.close = function() {
-						console.log(':o', directiveInstance);
-						DirectiveFactory.close(directiveInstance, false);
-					};*/
-
 					// Open a new DirectiveFactory directive instance
 					DirectiveFactory.open(directiveInstance, {
 						scope: directiveScope,
 						deferred: directiveResultDeferred,
 						content: tplAndVars[0],
+						backdrop: directiveOptions.backdrop,
 						closeOnEscape: directiveOptions.closeOnEscape,
 						directiveClass: directiveOptions.directiveClass,
 						directiveTemplateUrl: directiveOptions.directiveTemplateUrl

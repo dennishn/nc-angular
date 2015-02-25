@@ -1,3 +1,39 @@
-.index {
+.debug-tools {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 9999;
+}
 
+.first {
+
+	color: green;
+
+	.second {
+		color: red;
+	}
+
+	h1, h2, h3 {
+		&.ng-enter,
+		&.ng-leave {
+			transition: all 1s;
+		}
+		&.ng-enter {
+			opacity: 0;
+		}
+		&.ng-enter-active {
+			opacity: 1;
+		}
+		&.ng-enter-stagger {
+			transition-delay: .2s;
+		}
+
+		&.ng-leave {
+			opacity: 1;
+		}
+		&.ng-leave-active {
+			opacity: 0;
+		}
+	}
 }

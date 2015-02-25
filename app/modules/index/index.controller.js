@@ -13,7 +13,7 @@
 		.controller('Index', Index);
 
 	/* @ngInject */
-	function Index(directive, $timeout) {
+	function Index(directive, DirectiveFactory, $timeout) {
 		/*jshint validthis: true */
 		var vm = this;
 
@@ -28,19 +28,23 @@
 		function activate() {
 		};
 
-		function click() {
-			var directiveInstance = new directive.open({
-				template: '<h1>Parent Controller Value: {{appended.items}}</h1>',
+		function click($event) {
+			vm.directiveInstance = new directive.open({
+				//template: '<h1>Parent Controller Value: {{appended.items}}</h1>', - OK
+				templateUrl: 'modules/index/my-directive.template.html',
 				controller: 'Child as appended',
+				//backdrop: false, - OK
+				//closeOnEscape: false, - OK
+				directiveClass: 'panel',
 				resolve: {
 					items: function () {
 						return vm.parentValue;
 					}
 				}
 			});
-			vm.directives.push(directiveInstance);
+			vm.directives.push(vm.directiveInstance);
 
-			directiveInstance.result.then(function(result) {
+			vm.directiveInstance.result.then(function(result) {
 				console.info('directive closed: ', result);
 				vm.directives.pop();
 			}, function(error) {
@@ -54,7 +58,7 @@
 			vm.directives[index].close(false);
 		};
 		vm.dismissFromOutside = function() {
-			vm.directiveInstance.dismiss(false);
+			DirectiveFactory.close(vm.directiveInstance, false);
 		};
 
 	}
@@ -82,11 +86,18 @@
 
 		vm.items = items;
 
+		//vm.visible = false;
+
 		activate();
 
 		function activate() {
-			//console.log('Child', directiveInstance, items);
+			//console.log('Child', directiveInstance);
 		};
+
+		directiveInstance.opened.then(function() {
+			//console.log('after open');
+			//vm.visible = true;
+		});
 
 		/*$timeout(function() {
 			directiveInstance.close('closed');

@@ -15,12 +15,16 @@
 		.factory('DirectiveFactory', DirectiveFactory);
 
 	/* @ngInject */
-	function DirectiveFactory(Lifo, $timeout, $document, $compile, $rootScope, $animate) {
+	function DirectiveFactory(Lifo, $timeout, $document, $compile, $rootScope, $animate, $$rAF) {
 
 		// I handle the directives instances, and their position in the shared stack.
 		var OPENED_CLASS = 'ng-directive-open';
 
 		var ROOT_DIRECTIVE_MARKUP = '<div directive></div>';
+		var BACKDROP_DIRECTIVE_MARKUP = '<div backdrop></div>';
+
+		// Backdrop related
+		var backdropDomEl, backdropScope;
 
 		// Create a LIFO stack
 		var openedDirectives = Lifo.createNew();
@@ -36,6 +40,29 @@
 		/*
 			Private Methods
 		 */
+		// I return the top of the directive stacks index
+		function _getBackdropIndex() {
+			// Start value
+			var topBackdropIndex = -1;
+
+			// Get a list of all open directives
+			var opened = openedDirectives.keys();
+
+			// Loop through opened directives, if the backdrop is attached to this - return its index, else -1.
+			for(var i = 0; i < opened.length; i++) {
+				if(openedDirectives.get(opened[i]).value.backdrop) {
+					topBackdropIndex = i;
+				}
+			}
+			return topBackdropIndex;
+		}
+		// I watch the rootscope, for changes in the directive index stack, and update the backdrop scope accordingly
+		$rootScope.$watch(_getBackdropIndex, function(newBackdropIndex) {
+			if(backdropScope) {
+				backdropScope.index = newBackdropIndex;
+			}
+		});
+
 
 		// I take care of the "outside world" aswell as removing($destroying) the directive
 		function _removeDirective(directiveInstance) {
@@ -53,6 +80,12 @@
 			_removeAfterSomething(directiveElement.directiveDomElement, directiveElement.directiveScope, function() {
 				directiveElement.directiveScope.$destroy();
 				body.toggleClass(OPENED_CLASS, openedDirectives.length() > 0);
+
+				// Check and see if a backdrop should be removed
+				$timeout(function() {
+					_checkAndRemoveBackdrop();
+				});
+
 			});
 
 			// Only remove the OPENED_CLASS if we're at the last entry of the LIFO stack
@@ -60,13 +93,42 @@
 
 		}
 
-		// NOGET MED NG ANIMATE
-		function _removeAfterSomething(domEl, scope, done) {
+		// I am used to see if the backdrop is no longer needed, in which case i remove it
+		function _checkAndRemoveBackdrop() {
+			console.log('check n remove');
+			if(backdropDomEl && _getBackdropIndex() == -1) {
+				console.log('check n remove');
+				var backdropScopeReference = backdropScope;
 
+				//backdropDomEl.remove();
+
+				_removeAfterSomething(backdropDomEl, backdropScope, function() {
+					console.log('check n remove');
+					backdropScopeReference.$destroy();
+					backdropScopeReference = null;
+
+				});
+				/*$animate.leave(backdropDomEl).then(function() {
+					console.log('animate leave done on el: ', backdropDomEl);
+					//domEl.remove();
+
+				});*/
+
+				backdropDomEl = undefined;
+				backdropScope = undefined;
+
+			}
+
+		}
+
+		// NOGET MED NG ANIMATE, som destroyer scopes efter en animation... Giver det mening? Bliver done callback her
+		// forbundet med ng animate callbacks? Ville være porno...
+		function _removeAfterSomething(domEl, scope, done) {
+			console.log('calling remove on: ', domEl);
 			$animate.leave(domEl).then(function() {
-				if(done) {
-					done();
-				}
+				console.log('animate leave done on el: ', domEl);
+				//domEl.remove();
+				done();
 			});
 
 		}
@@ -102,12 +164,24 @@
 			openedDirectives.add(directiveInstance, {
 				deferred: directive.deferred,
 				directiveScope: directive.scope,
+				backdrop: directive.backdrop,
 				closeOnEscape: directive.closeOnEscape
 				// NOGET MED CLOSE ON CLICK OUTSIDE
 			});
 
 			// Reference the body DOM element
 			var body = $document.find('body').eq(0);
+
+			// Handle backdrop...
+			var currentBackdropIndex = _getBackdropIndex();
+
+			if(currentBackdropIndex >= 0 && !backdropDomEl) {
+
+				backdropScope = $rootScope.$new(true);
+				backdropScope.index = currentBackdropIndex;
+				backdropDomEl = $compile(BACKDROP_DIRECTIVE_MARKUP)(backdropScope);
+				body.append(backdropDomEl);
+			}
 
 			// Create and reference the root directive element
 			// MORE EXPLANATION
@@ -125,23 +199,17 @@
 			// Append the directive content (This is perhaps transclusion?
 			directiveRootElement.html(directive.content);
 
-			// Compile the root element, add it's scope
+			// Compile the root element, add it's scope, no this is transclusion!
 			var directiveDomElement = $compile(directiveRootElement)(directive.scope);
 
 			// Add the compiled dom to the LIFO stack
 			openedDirectives.top().value.directiveDomElement = directiveDomElement;
 
-			//console.log(directiveDomElement[0].getBoundingClientRect());
-			console.log(directiveDomElement, $animate);
-
 			// Append the compiled dom to the body
 			body.append(directiveDomElement);
-			//$timeout(function() {
-			//	$animate.enter(directiveDomElement, body, angular.element(body[0].lastChild));
-			//}, 100);
 
 			// Add opened class to the body
-			//body.addClass(OPENED_CLASS);
+			body.addClass(OPENED_CLASS);
 
 		}
 

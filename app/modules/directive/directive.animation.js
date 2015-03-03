@@ -23,65 +23,34 @@
 			return prev;
 		}
 
+		function _getNext(element) {
+
+			var next;
+
+			if(element.next().hasClass(className)) {
+				next = element.next();
+			}
+
+			return next;
+		}
+
 		function _getAll(element) {
 
 			var parent = element.parent();
 
-			return parent.find('.' + className);
-
-
-
-		}
-
-		function _moveY(value) {
-
-			return 0-value;
-
-		}
-		function _moveZ(value) {
-
-			return 0-value;
+			return parent.children('.' + className);
 
 		}
 
 		return {
 			beforeEnter: function(element, done) {
 
-				var previousElement = _getPrev(element);
-				var elements = _getAll(element);
-				var lifos = lifoStack.keys();
 
-				console.log(elements);
-
-				//if(previousElement) {
-
-					for(var i = 0; i < lifoStack.length(); i++) {
-
-						console.log(lifoStack.get(lifos[i])	)
-
-						/*TweenMax.to(lifoStack.get(i), 0.6, {
-							y: _moveY(i) + '%',
-							onComplete: function() {
-
-							}
-						});*/
-
-					}
-
-					/*TweenMax.to(previousElement, 0.6, {
-						y: _moveY(lifoStack.length()) + '%',
-						z: _moveZ(lifoStack.length()) + '%',
-						onComplete: function() {
-
-						}
-					});*/
-
-				//}
 
 				// Before we trigger the entrance animation, but after the directive is added to the DOM.
 				TweenMax.set(element, {
 					opacity: 0,
-					y: 0,
+					y: 40,
 					// Foundation Hack, bare for debug ui
 					display: 'block',
 					visibility: 'visible',
@@ -90,16 +59,69 @@
 			},
 			enter: function(element, done) {
 
+				var previousElement = _getPrev(element);
+				var elements = _getAll(element);
+
+				if(previousElement) {
+
+					var len = (elements.length == 0) ? elements.length : elements.length-1;
+
+					for(var i = 0; i < len; i++) {
+
+						var multiplierA = -(elements.length - i)*20;
+						var multiplierB = 1 - ((elements.length - i)/10);
+
+						multiplierA = (multiplierA <= -100) ? -100 : multiplierA;
+						multiplierB = (multiplierB <= 0.1) ? 0.1 : multiplierB;
+
+						TweenMax.to(elements[i], 0.6, {
+							y: multiplierA,
+							scale: multiplierB,
+							onComplete: function() {
+
+							}
+						});
+					}
+				}
+
 				// Triggered when done callback is fired from beforeEnter
-				TweenMax.to(element, 0.6, {
+				TweenMax.to(element, 0.3, {
 					opacity: 1,
+					y: 0,
 					onComplete: function() {
-						lifoStack.add(element, {});
+						lifoStack.add(element, element);
 						done();
 					}
 				});
 			},
 			leave: function(element, done) {
+
+				var previousElement = _getPrev(element);
+				var elements = _getAll(element);
+
+				if(previousElement) {
+
+					var len = (elements.length == 0) ? elements.length : elements.length-1;
+
+					for(var i = 0; i < len; i++) {
+
+						var multiplierA = -(elements.length - i)*20;
+						var multiplierB = (elements.length - i)/10;
+
+						//multiplierA = (multiplierA <= -100) ? -100 : multiplierA;
+						//multiplierB = (multiplierB <= 0.1) ? 0.1 : multiplierB;
+
+						console.log(multiplierA, multiplierB)
+
+						TweenMax.to(elements[i], 0.6, {
+							y: '+=' + 20,
+							scale: '+=' + 0.2,
+							onComplete: function() {
+
+							}
+						});
+					}
+				}
 
 				// Triggered when done callback is fired from beforeLeave (NYI)
 				TweenMax.to(element, 1, {

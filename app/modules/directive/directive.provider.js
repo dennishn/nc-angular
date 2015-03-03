@@ -123,7 +123,8 @@
 						// Bind instance to controller
 						controllerLocals.directiveInstance = directiveInstance;
 
-						// forklaring
+						// TODO: https://gist.github.com/vojtajina/1649788
+						//
 						angular.forEach(directiveOptions.resolve, function(value, key) {
 							controllerLocals[key] = tplAndVars[resolveIterations++];
 						});

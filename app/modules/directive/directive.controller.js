@@ -19,14 +19,8 @@
 
 		vm.controllerFunction = controllerFunction();
 
-		activate();
-
-		function activate() {
-			console.log('Directive Controller started');
-		};
-
 		function controllerFunction() {
-			console.log('I was triggered by calling the DirectiveController function "controllerFunction()"');
+			console.log('Internal directive controller');
 		}
 	};
 

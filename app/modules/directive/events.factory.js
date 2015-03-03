@@ -2,7 +2,7 @@
 	'use strict';
 
 	/*
-		TODO: NYI
+		TODO: NYI - pub/sub system i guess!
 	 */
 
 	/**

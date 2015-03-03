@@ -20,13 +20,13 @@
 			enter: function(element, done) {
 
 				// Triggered when done callback is fired from beforeEnter
-				TweenMax.to(element, 5, {
+				TweenMax.to(element,0.6, {
 					opacity: 1,
 					onComplete: done
 				});
 			},
 			leave: function(element, done) {
-				
+
 				// Triggered when done callback is fired from beforeLeave (NYI)
 				TweenMax.to(element, 1, {
 					opacity: 0,

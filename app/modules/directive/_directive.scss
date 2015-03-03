@@ -2,8 +2,11 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: $gainsboro;
+	width: 300px;
+	height: 300px;
+	margin-top: -150px;
+	margin-left: -150px;
+
+	background: #fff;
 }
+

@@ -35,13 +35,11 @@
 		return directive;
 
 		function preLink(scope, element, attrs, controller, transclude) {
-			console.log('pre link');
+
 		}
 		function postLink(scope, element, attrs, controller, transclude) {
 
 			var body = $document.find('body').eq(0);
-
-			element.addClass(attrs.directiveClass || '');
 
 			$animate.enter(element, body, angular.element(body[0].lastChild)).then(function() {
 
@@ -60,19 +58,6 @@
 					element[0].focus();
 				}
 			});
-
-			/*scope.close = function(event) {
-				// When a user clicks "outside" of the directive, we check if this specific instance
-				// is the next-to-be-removed instance in the LIFO stack. If this directive is next in line,
-				// we cancel any events, and dismiss (promise.reject) this directive.
-
-				var directive = DirectiveFactory.getTop();
-				if (directive && (event.target === event.currentTarget)) {
-					event.preventDefault();
-					event.stopPropagation();
-					DirectiveFactory.dismiss(directive.key, 'click outside');
-				}
-			}*/
 		}
 
 	}

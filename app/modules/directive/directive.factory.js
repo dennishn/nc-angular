@@ -77,23 +77,22 @@
 			openedDirectives.remove(directiveElement);
 
 			// NOGET MED NG ANIMATE
-			_removeAfterSomething(directiveElement.directiveDomElement, directiveElement.directiveScope, function() {
+			_removeAfterAnimation(directiveElement.directiveDomElement, directiveElement.directiveScope, function() {
 				directiveElement.directiveScope.$destroy();
 				body.toggleClass(OPENED_CLASS, openedDirectives.length() > 0);
-
-				// Check and see if a backdrop should be removed, force a render loop to make sure that everyon
-				// knows that the animation that closed the acutal modal finished.
-				$timeout(function() {
-					_checkAndRemoveBackdrop();
-				});
-
 			});
+			_checkAndRemoveBackdrop();
 
 			// Only remove the OPENED_CLASS if we're at the last entry of the LIFO stack
 			body.toggleClass(OPENED_CLASS, openedDirectives.length() > 0);
 
 		}
 
+		function _shouldRemoveBackdrop() {
+
+			return backdropDomEl && _getBackdropIndex == -1;
+
+		}
 		// I am used to see if the backdrop is no longer needed, in which case i remove it
 		function _checkAndRemoveBackdrop() {
 
@@ -101,10 +100,9 @@
 
 				var backdropScopeReference = backdropScope;
 
-				_removeAfterSomething(backdropDomEl, backdropScope, function() {
+				_removeWhileAnimating(backdropDomEl, function() {
 					backdropScopeReference.$destroy();
 					backdropScopeReference = null;
-
 				});
 
 				backdropDomEl = undefined;
@@ -114,15 +112,18 @@
 
 		}
 
-		// NOGET MED NG ANIMATE, som destroyer scopes efter en animation... Giver det mening? Bliver done callback her
-		// forbundet med ng animate callbacks? Ville være porno...
-		function _removeAfterSomething(domEl, scope, done) {
-
+		function _removeWhileAnimating(domEl, done) {
 			$animate.leave(domEl).then(function() {
-
 				done();
 			});
-
+		}
+		// I run a leave animation, and fire a provided callback when the animation is done.
+		function _removeAfterAnimation(domEl, scope, done) {
+			$animate.leave(domEl).then(function() {
+				$rootScope.$apply(function() {
+					done();
+				});
+			});
 		}
 
 		/*
@@ -143,7 +144,6 @@
 				}
 			}
 		});
-		// NOGET MED CLOSE ON CLICK OUTSIDE
 
 		/*
 			Public Methods
@@ -158,7 +158,6 @@
 				directiveScope: directive.scope,
 				backdrop: directive.backdrop,
 				closeOnEscape: directive.closeOnEscape
-				// NOGET MED CLOSE ON CLICK OUTSIDE
 			});
 
 			// Reference the body DOM element
@@ -190,6 +189,9 @@
 			});
 			// Append the directive content (This is perhaps transclusion?
 			directiveRootElement.html(directive.content);
+
+			// Add additional classes
+			directiveRootElement.addClass(directive.directiveClass);
 
 			// Compile the root element, add it's scope, no this is transclusion!
 			var directiveDomElement = $compile(directiveRootElement)(directive.scope);

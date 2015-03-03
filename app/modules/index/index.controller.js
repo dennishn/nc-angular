@@ -30,12 +30,12 @@
 
 		function click($event) {
 			vm.directiveInstance = new directive.open({
-				//template: '<h1>Parent Controller Value: {{appended.items}}</h1>', - OK
+				//template: '<h1>Parent Controller Value: {{appended.items}}</h1>',
 				templateUrl: 'modules/index/my-directive.template.html',
 				controller: 'Child as appended',
-				//backdrop: false, - OK
-				//closeOnEscape: false, - OK
-				directiveClass: 'panel',
+				//backdrop: 'static',
+				//closeOnEscape: false,
+				directiveClass: 'reveal-modal',
 				resolve: {
 					items: function () {
 						return vm.parentValue;
@@ -86,22 +86,9 @@
 
 		vm.items = items;
 
-		//vm.visible = false;
-
-		activate();
-
-		function activate() {
-			//console.log('Child', directiveInstance);
-		};
-
 		directiveInstance.opened.then(function() {
-			//console.log('after open');
-			//vm.visible = true;
+			console.log('User assigned controller, after open');
 		});
-
-		/*$timeout(function() {
-			directiveInstance.close('closed');
-		}, 1000);*/
 
 	};
 

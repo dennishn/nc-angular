@@ -55,7 +55,7 @@
 				 * the modal element if the modal does not contain an autofocus element.
 				 */
 				if (!element[0].querySelectorAll('[autofocus]').length) {
-					element[0].focus();
+					//element[0].focus();
 				}
 			});
 		}

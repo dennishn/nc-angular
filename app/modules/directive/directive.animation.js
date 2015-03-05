@@ -12,6 +12,8 @@
 
 		var className = 'directive';
 
+		var duration = 0.6;
+
 		function _getPrev(element) {
 
 			var prev;
@@ -50,7 +52,7 @@
 				// Before we trigger the entrance animation, but after the directive is added to the DOM.
 				TweenMax.set(element, {
 					opacity: 0,
-					y: 40,
+					y: '60%',
 					// Foundation Hack, bare for debug ui
 					display: 'block',
 					visibility: 'visible',
@@ -62,32 +64,35 @@
 				var previousElement = _getPrev(element);
 				var elements = _getAll(element);
 
-				if(previousElement) {
+				//if(previousElement) {
 
 					var len = (elements.length == 0) ? elements.length : elements.length-1;
 
-					for(var i = 0; i < len; i++) {
+					for(var i = 0; i < elements.length; i++) {
 
-						var multiplierA = -(elements.length - i)*20;
-						var multiplierB = 1 - ((elements.length - i)/10);
+						var multiplierA = -((elements.length - i)-1)*20;
+						var multiplierB = 1 - (((elements.length - i)-1)/10);
 
-						multiplierA = (multiplierA <= -100) ? -100 : multiplierA;
-						multiplierB = (multiplierB <= 0.1) ? 0.1 : multiplierB;
+						multiplierA = (multiplierA < -100) ? -100 : multiplierA;
+						multiplierB = (multiplierB < 0.1) ? 0.1 : multiplierB;
 
-						TweenMax.to(elements[i], 0.6, {
+						TweenMax.to(elements[i], duration, {
 							y: multiplierA,
 							scale: multiplierB,
+							ease: Elastic.easeOut.config(2.5, 0.75),
 							onComplete: function() {
 
 							}
 						});
 					}
-				}
+				//}
 
 				// Triggered when done callback is fired from beforeEnter
-				TweenMax.to(element, 0.3, {
-					opacity: 1,
-					y: 0,
+				TweenMax.to(element, duration/2, {
+					opacity: 1
+				});
+				TweenMax.to(element, duration, {
+					y: '0%',
 					onComplete: function() {
 						lifoStack.add(element, element);
 						done();
@@ -99,32 +104,34 @@
 				var previousElement = _getPrev(element);
 				var elements = _getAll(element);
 
-				if(previousElement) {
+				//if(previousElement) {
 
-					var len = (elements.length == 0) ? elements.length : elements.length-1;
+					for(var i = 0; i < elements.length; i++) {
 
-					for(var i = 0; i < len; i++) {
+						var elTransforms = elements[i]._gsTransform;
 
 						var multiplierA = -(elements.length - i)*20;
-						var multiplierB = (elements.length - i)/10;
+						multiplierA = (multiplierA < -120) ? -140 : multiplierA;
 
-						//multiplierA = (multiplierA <= -100) ? -100 : multiplierA;
-						//multiplierB = (multiplierB <= 0.1) ? 0.1 : multiplierB;
+						var multiplierB = 1 - ((elements.length - i)/10);
+						multiplierB = (multiplierB < 0.1) ? 0 : multiplierB;
+						console.log(multiplierB);
 
-						console.log(multiplierA, multiplierB)
+						console.log('hej', multiplierB, multiplierB);
+						//var multiplierB = ((prevMultiplierB+0.2) >= 1) ? 1 : (prevMultiplierB + 0.2);
 
-						TweenMax.to(elements[i], 0.6, {
-							y: '+=' + 20,
-							scale: '+=' + 0.2,
+						TweenMax.to(elements[i], duration, {
+							y: multiplierA + 40,
+							scale: multiplierB + 0.2,
+							ease: Elastic.easeOut.config(2.5, 0.75),
 							onComplete: function() {
-
 							}
 						});
 					}
-				}
+				//}
 
 				// Triggered when done callback is fired from beforeLeave (NYI)
-				TweenMax.to(element, 1, {
+				TweenMax.to(element, duration, {
 					opacity: 0,
 					onComplete: function() {
 						lifoStack.remove(element);

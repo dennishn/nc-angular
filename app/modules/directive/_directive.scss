@@ -1,3 +1,9 @@
+body, html {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
 .directive {
 	position: absolute;
 	top: 50%;
@@ -7,6 +13,11 @@
 	margin-top: -150px;
 	margin-left: -150px;
 
-	background: #fff;
+	&:nth-child(odd) {
+		background: tomato;
+	}
+	&:nth-child(even) {
+		background: #ffffff;
+	}
 }
 

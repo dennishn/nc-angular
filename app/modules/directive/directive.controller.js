@@ -20,7 +20,7 @@
 		vm.controllerFunction = controllerFunction();
 
 		function controllerFunction() {
-			console.log('Internal directive controller');
+			//console.log('Internal directive controller');
 		}
 	};
 

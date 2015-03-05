@@ -45,16 +45,16 @@
 			vm.directives.push(vm.directiveInstance);
 
 			vm.directiveInstance.result.then(function(result) {
-				console.info('directive closed: ', result);
+				//console.info('directive closed: ', result);
 				vm.directives.pop();
 			}, function(error) {
-				console.warn('directive dismissed: ', error);
+				//console.warn('directive dismissed: ', error);
 			});
 		}
 
 		vm.closeFromOutside = function() {
 			var index = vm.directives.length > 1 ? vm.directives.length -1 : 0;
-			console.log(vm.directives, index);
+			//console.log(vm.directives, index);
 			vm.directives[index].close(false);
 		};
 		vm.dismissFromOutside = function() {
@@ -87,7 +87,7 @@
 		vm.items = items;
 
 		directiveInstance.opened.then(function() {
-			console.log('User assigned controller, after open');
+			//console.log('User assigned controller, after open');
 		});
 
 	};

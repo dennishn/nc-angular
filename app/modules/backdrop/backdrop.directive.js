@@ -44,11 +44,7 @@
 				//get top directive
 				var directive = DirectiveFactory.getTop();
 
-				console.log('should it close? ', _shouldClose(directive, $event));
-
 				if(_shouldClose(directive, $event)) {
-
-					console.log('it should');
 
 					$event.preventDefault();
 					$event.stopPropagation();

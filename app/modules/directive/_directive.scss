@@ -13,6 +13,8 @@ body, html {
 	margin-top: -150px;
 	margin-left: -150px;
 
+	transform-origin: top;
+
 	&:nth-child(odd) {
 		background: tomato;
 	}

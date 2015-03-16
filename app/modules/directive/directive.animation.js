@@ -12,7 +12,21 @@
 
 		var className = 'directive';
 
+		var counter = 0;
+
 		var duration = 0.6;
+
+		var minScale = 0.1,
+			maxScale = 1;
+
+		var minY = -100,
+			maxY = 0;
+
+		function _calcRelative(min, max, value) {
+
+			console.log(min, max, value)
+
+		}
 
 		function _getPrev(element) {
 
@@ -40,14 +54,16 @@
 
 			var parent = element.parent();
 
-			return parent.children('.' + className);
+			var array = parent.children('.' + className);
+
+			array.splice(-1, 1);
+
+			return array;
 
 		}
 
 		return {
 			beforeEnter: function(element, done) {
-
-
 
 				// Before we trigger the entrance animation, but after the directive is added to the DOM.
 				TweenMax.set(element, {
@@ -61,31 +77,25 @@
 			},
 			enter: function(element, done) {
 
-				var previousElement = _getPrev(element);
 				var elements = _getAll(element);
 
-				//if(previousElement) {
+				for(var i = 0; i < elements.length; i++) {
 
-					var len = (elements.length == 0) ? elements.length : elements.length-1;
+					var yFrom = Math.floor((elements.length - i) * 10);
+					var scaleFrom = (elements.length - i) / 10;
 
-					for(var i = 0; i < elements.length; i++) {
+					var yTo = (yFrom > 70) ? 0 : -(yFrom);
 
-						var multiplierA = -((elements.length - i)-1)*20;
-						var multiplierB = 1 - (((elements.length - i)-1)/10);
+					var scaleTo = (scaleFrom >= 1) ? 0.1 : 1 - (scaleFrom);
 
-						multiplierA = (multiplierA < -100) ? -100 : multiplierA;
-						multiplierB = (multiplierB < 0.1) ? 0.1 : multiplierB;
-
-						TweenMax.to(elements[i], duration, {
-							y: multiplierA,
-							scale: multiplierB,
-							ease: Elastic.easeOut.config(2.5, 0.75),
-							onComplete: function() {
-
-							}
-						});
-					}
-				//}
+					TweenMax.to(elements[i], duration, {
+						y: yTo,
+						scale: scaleTo,
+						parseTransform: true,
+						force3D: true,
+						autoRound: false
+					});
+				}
 
 				// Triggered when done callback is fired from beforeEnter
 				TweenMax.to(element, duration/2, {
@@ -93,8 +103,10 @@
 				});
 				TweenMax.to(element, duration, {
 					y: '0%',
+					parseTransform: true,
+					force3D: true,
 					onComplete: function() {
-						lifoStack.add(element, element);
+						elements = undefined;
 						done();
 					}
 				});
@@ -104,37 +116,48 @@
 				var previousElement = _getPrev(element);
 				var elements = _getAll(element);
 
-				//if(previousElement) {
+				for(var i = 0; i < elements.length; i++) {
+					//console.log(i);
 
-					for(var i = 0; i < elements.length; i++) {
+						var props = elements[i]._gsTransform;
 
-						var elTransforms = elements[i]._gsTransform;
+						var yFrom = props.y;
+						var scaleFrom = Math.floor(props.scaleX * 10);
+						//console.log('///')
+						scaleFrom = scaleFrom / 10;
 
-						var multiplierA = -(elements.length - i)*20;
-						multiplierA = (multiplierA < -120) ? -140 : multiplierA;
+						console.log('i was: ', props.scaleX, ' index is: ', i);
+						console.log('i am scaling from: ', scaleFrom);
 
-						var multiplierB = 1 - ((elements.length - i)/10);
-						multiplierB = (multiplierB < 0.1) ? 0 : multiplierB;
-						console.log(multiplierB);
+						// Der er 9 der må scales
 
-						console.log('hej', multiplierB, multiplierB);
-						//var multiplierB = ((prevMultiplierB+0.2) >= 1) ? 1 : (prevMultiplierB + 0.2);
 
+						var yTo = (yFrom >= -10) ? 0 : yFrom + 10;
+						//var scaleTo = (((elements.length - i) / 10) > 1) ? '+=' + 0 : '+=' + 0.1;
+						var scaleTo = (scaleFrom >= 1) ? 1 : scaleFrom + 0.1;
+						console.log('i am scaling to: ', scaleTo);
+						console.log('///');
+					if((elements.length - i) <= 10) {
 						TweenMax.to(elements[i], duration, {
-							y: multiplierA + 40,
-							scale: multiplierB + 0.2,
-							ease: Elastic.easeOut.config(2.5, 0.75),
-							onComplete: function() {
-							}
+							y: yTo,
+							scale: scaleTo,
+							//parseTransform: true,
+							force3D: true,
+							autoRound: true
 						});
 					}
-				//}
+				}
 
 				// Triggered when done callback is fired from beforeLeave (NYI)
+				TweenMax.to(element, duration/2, {
+					opacity: 0
+				});
 				TweenMax.to(element, duration, {
-					opacity: 0,
+					y: '60%',
+					//parseTransform: true,
+					force3D: true,
 					onComplete: function() {
-						lifoStack.remove(element);
+						elements = undefined;
 						done();
 					}
 				});

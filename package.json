@@ -21,7 +21,7 @@
 		"grunt-ng-annotate": "^0.3.0",
 		"grunt-ng-constant": "^1.0.0",
 		"grunt-angular-templates": "^0.5.7",
-		"grunt-sass": "^0.17.0",
+		"grunt-sass": "*",
 		"grunt-svgmin": "^0.4.0",
 		"grunt-usemin": "^2.1.1",
 		"grunt-uncss": "^0.3.5",
